@@ -1,56 +1,63 @@
-## Asignación de programación 2
+## Programming Assignment 2
 
-## Se pretende crear una función que calcule la matriz inversa si y solo si previamente no la ha calculado
+## A function should be created which calculates the inverse of a matrix if and only if it has not been previously calculated 
 
-## Se requieren dos funciones:
+## Two functions are required:
 
-## a) una que arme la estructura para el cálculo de la matriz inversa, almacenándola en caché y
+## a) one that sets up the calculation "structure" for the inverse matrix, stroing it in cache and 
+## b) one that estracts the inverse matrix from cache OR calculates the inverse and stores it in cache,
+##    dependint on wheter or not it has been previously calculated
 
-## b) una que la extraiga del caché o que la calcule y la almacene en caché, dependiendo de si la ha o no calculado previamente 
+## This file contains the complete solution i.e.: both functions
 
-## Este archivo contiene la solución (las dos funciones) 
+## Calling secuence 
+
+##             v1 <- makeCachematrix(originalmatrix)
+##             v2 <- cacheSolve(V1)
+##             v1 %*% v2 should give an identity matrix     
 
 ## makeCacheMatrix 
-##           Arma la estructura necesaria y calcula matriz inversa 
+##           Sets up the necesary struicture including calculation of the inverse 
 
 makeCacheMatrix <- function(matriz = matrix()) {
 
-    creada <- NULL  ## NULL si es la primera ejecución o la matriz en sucesivas 	
+    creada <- NULL  ## NULL if it is the first execution
 
-	set <- function(y) {       ## guarda la matriz en caché 
+	set <- function(y) {       ## store the matrix in cache 
 		matriz <<- y	
 		creada <<- NULL
 		}
 
-	get <- function() matriz 		## obtiene la matriz
+	get <- function() matriz 		## obtain the matriz
 
-	setinverse <- function(solve) creada <<- solve  ## calcula inversa 
+	setinverse <- function(solve) creada <<- solve  ## inverse calculation 
  
-	getinverse <- function() creada   ## extrae matriz inversa 
+	getinverse <- function() creada   ## get inverse matrix  
 
-   list (set=set, get=get, setinverse=setinverse, getinverse=getinverse) ## regresa el vector con las funciones y la matrriz original
+   list (set=set, get=get, setinverse=setinverse, getinverse=getinverse) ## regresa the vector with the functions and original matrix
    
 }
 
-## cahceSolve 
-##        Invoca el cálculo de la matriz inversa si no la tiene en memoria o la recuupera en caso de haberla calculado previamente 
+## cacheSolve 
+##        perform inverse matrix calculation if it is not in cache. Otherwise recover from cache
 
-## Aún cuando esta mecánica resulta intresante, básicamente se tienen dos compias de la matriz en memoria, lo cual puede ser un problema si la memoria no es muy grande y las matrrices sí... 
+## Eventhough this structure ois very interesting, you finish with two copies of the matrix in memory 
+## which can be a problem if youy don't have big memory available
 
 cacheSolve <- function(vector, ...) {
 
-	creada <- vector$getinverse() ## obtiene matriz o NULL
+	creada <- vector$getinverse() ## obtain matrix or NULL
 
-	if(!is.null(creada)) {   ## si ya había calculado la matriz 
-		message("obteniendo la matriz inversa desde el caché") 
-		return(creada)      ## regresa el resultado en caché
+	if(!is.null(creada)) {   ## if inverse already calculated  
+		message("getting inverse matrix from cache") 
+		return(creada)      ## get it from cache and return result
 		}
 	
-	datos <- vector$get() 		## obtiene matriz orginal 
+	datos <- vector$get() 		## get original matrix  
 	
-	creada <- solve(datos,...) 	## calcula al inversa 
+	creada <- solve(datos,...) 	## determine the inverse  
 	
-	vector$setinverse(creada)			## la guarda en caché
+	vector$setinverse(creada)	## and storew it in cache 
 
-	creada					##regresa el resultado la matriz inversa
+	creada					##return inverse matrix as the result
 }
